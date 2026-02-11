@@ -16,8 +16,6 @@ const _dirname = path.resolve();
 
 // ! Load The enviremnet Variable
 dotenv.config();
-// ! Establish connection to MongoDB
-ConnectDB();
 //! setup middleware 
 app.use(express.json());
 
@@ -74,4 +72,14 @@ app.use(globalErrorHandler)
  */
 const PORT = process.env.PORT || 5000
 
-app.listen(PORT);
+const startServer = async () => {
+    try {
+        await ConnectDB();
+        app.listen(PORT);
+    } catch (error) {
+        console.error("Server startup failed:", error.message);
+        process.exit(1);
+    }
+};
+
+startServer();
