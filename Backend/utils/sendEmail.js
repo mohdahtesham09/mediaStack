@@ -6,6 +6,7 @@ const dotenv = require("dotenv")
 dotenv.config();
 
 const sendEmail = async(to, resetToken)=>{
+    const frontendUrl = (process.env.FRONTEND_URL || "https://mediastack.in").replace(/\/+$/, "");
     try{
         //!create a transport object
         const transport = nodemailer.createTransport({
@@ -25,7 +26,7 @@ const sendEmail = async(to, resetToken)=>{
 
              <p>Please click on the following link, or paste this into your browser to complete the process:</p>
 
-             <p>https://localhost:3000/reset-password/${resetToken}</p>
+             <p>${frontendUrl}/reset-password/${resetToken}</p>
 
              spolf you did not request this, please ignore this email and your password will remain unchanged.</p>`
         };

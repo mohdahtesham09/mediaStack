@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { resetErrorAction, resetSuccessAction } from "../globalSlice/globalSlice";
+import { API_V1_URL } from "../../../utils/api";
 const INITIAL_STATE = {
   loading: false,
   error: null,
@@ -24,7 +25,7 @@ const INITIAL_STATE = {
 export const loginAction = createAsyncThunk("users/login", async (payload, { rejectWithValue, getState, dispatch }) => {
   // make request 
   try {
-    const { data } = await axios.post("http://localhost:3000/api/v1/users/login", payload);
+    const { data } = await axios.post(`${API_V1_URL}/users/login`, payload);
     localStorage.setItem("userInfo", JSON.stringify(data))
     return data;
   } catch (error) {
@@ -37,7 +38,7 @@ export const loginAction = createAsyncThunk("users/login", async (payload, { rej
 export const registerAction = createAsyncThunk("users/register", async (payload, { rejectWithValue, getState, dispatch }) => {
   // make request 
   try {
-    const { data } = await axios.post("http://localhost:3000/api/v1/users/register", payload);
+    const { data } = await axios.post(`${API_V1_URL}/users/register`, payload);
     return data;
   } catch (error) {
     return rejectWithValue(error?.response?.data);
@@ -62,7 +63,7 @@ export const fetchUserProfileAction = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `http://localhost:3000/api/v1/users/profile`,
+        `${API_V1_URL}/users/profile`,
         config
       );
       return data;
@@ -84,7 +85,7 @@ export const followUserAction = createAsyncThunk(
         },
       };
       const { data } = await axios.put(
-        `http://localhost:3000/api/v1/users/following/${userId}`,
+        `${API_V1_URL}/users/following/${userId}`,
         {},
         config
       );
@@ -107,7 +108,7 @@ export const unfollowUserAction = createAsyncThunk(
         },
       };
       const { data } = await axios.put(
-        `http://localhost:3000/api/v1/users/unfollowing/${userId}`,
+        `${API_V1_URL}/users/unfollowing/${userId}`,
         {},
         config
       );
@@ -130,7 +131,7 @@ export const blockUserAction = createAsyncThunk(
         },
       };
       const { data } = await axios.put(
-        `http://localhost:3000/api/v1/users/block/${userId}`,
+        `${API_V1_URL}/users/block/${userId}`,
         {},
         config
       );
@@ -153,7 +154,7 @@ export const unblockUserAction = createAsyncThunk(
         },
       };
       const { data } = await axios.put(
-        `http://localhost:3000/api/v1/users/unblock/${userId}`,
+        `${API_V1_URL}/users/unblock/${userId}`,
         {},
         config
       );
@@ -176,7 +177,7 @@ export const updateUserProfileAction = createAsyncThunk(
       };
 
       const { data } = await axios.put(
-        `http://localhost:3000/api/v1/users/profile`,
+        `${API_V1_URL}/users/profile`,
         payload,
         config
       );

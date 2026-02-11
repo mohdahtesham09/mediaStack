@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { resetErrorAction, resetSuccessAction } from "../globalSlice/globalSlice";
 import axios from "axios";
+import { API_V1_URL } from "../../../utils/api";
 
 const INITIAL_STATE = {
   loading: false,
@@ -39,7 +40,7 @@ export const fetchPublicPostsAction = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const { data } = await axios.get(
-        `http://localhost:3000/api/v1/posts/public?page=${payload?.page || 1}&limit=6`
+        `${API_V1_URL}/posts/public?page=${payload?.page || 1}&limit=6`
       );
       return data;
     } catch (error) {
@@ -53,7 +54,7 @@ export const fetchPostDetailsAction = createAsyncThunk(
   "posts/fetch-single-post",
   async (postId, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(`http://localhost:3000/api/v1/posts/${postId}`);
+      const { data } = await axios.get(`${API_V1_URL}/posts/${postId}`);
       return data;
     } catch (error) {
       return rejectWithValue(error?.response?.data);
@@ -77,7 +78,7 @@ export const addPostAction = createAsyncThunk(
       formData.append("file", payload.image);
 
       const config = getAuthConfig(getState);
-      const { data } = await axios.post("http://localhost:3000/api/v1/posts", formData, config);
+      const { data } = await axios.post(`${API_V1_URL}/posts`, formData, config);
       return data;
     } catch (error) {
       return rejectWithValue(error?.response?.data || { message: error.message });
@@ -92,7 +93,7 @@ export const updatePostAction = createAsyncThunk(
     try {
       const config = getAuthConfig(getState);
       const { data } = await axios.put(
-        `http://localhost:3000/api/v1/posts/${postId}`,
+        `${API_V1_URL}/posts/${postId}`,
         payload,
         config
       );
@@ -109,7 +110,7 @@ export const deletePostAction = createAsyncThunk(
   async (postId, { rejectWithValue, getState }) => {
     try {
       const config = getAuthConfig(getState);
-      const { data } = await axios.delete(`http://localhost:3000/api/v1/posts/${postId}`, config);
+      const { data } = await axios.delete(`${API_V1_URL}/posts/${postId}`, config);
       return { ...data, postId };
     } catch (error) {
       return rejectWithValue(error?.response?.data || { message: error.message });

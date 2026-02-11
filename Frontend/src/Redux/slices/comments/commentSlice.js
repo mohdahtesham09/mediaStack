@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, isRejectedWithValue } from "@reduxjs/toolkit";
 import axios from "axios";
 import { resetErrorAction, resetSuccessAction } from "../globalSlice/globalSlice";
+import { API_V1_URL } from "../../../utils/api";
 
 // Initial State
 const INITIAL_STATE = {
@@ -25,7 +26,7 @@ export const createCommentAction = createAsyncThunk(
             };
 
             const { data } = await axios.post(
-                `http://localhost:3000/api/v1/comments/${postId}`,
+                `${API_V1_URL}/comments/${postId}`,
                 { message: description },
                 config
             );
@@ -54,7 +55,7 @@ export const deleteCommentAction = createAsyncThunk(
                 },
             };
             await axios.delete(
-                `http://localhost:3000/api/v1/comments/${commentId}`,
+                `${API_V1_URL}/comments/${commentId}`,
                 config
             );
             return commentId; // Return ID to filter local state
@@ -77,7 +78,7 @@ export const updateCommentAction = createAsyncThunk(
                 },
             };
             const { data } = await axios.put(
-                `http://localhost:3000/api/v1/comments/${id}`,
+                `${API_V1_URL}/comments/${id}`,
                 { message: description },
                 config
             );

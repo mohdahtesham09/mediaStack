@@ -6,6 +6,7 @@ const dotenv = require("dotenv")
 dotenv.config();
 
 const sendAccountVerificationEmail = async(to, verificationToken)=>{
+    const frontendUrl = (process.env.FRONTEND_URL || "https://mediastack.in").replace(/\/+$/, "");
     try{
         //!create a transport object
         const transport = nodemailer.createTransport({
@@ -25,7 +26,7 @@ const sendAccountVerificationEmail = async(to, verificationToken)=>{
 
              <p>Please click on the following link, or paste this into your browser to complete the process:</p>
 
-             <p>https://localhost:3000/reset-password/${verificationToken}</p>
+             <p>${frontendUrl}/reset-password/${verificationToken}</p>
 
              spolf you did not request this, please ignore this email and your password will remain unchanged.</p>`
         };
