@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon backend/server.js",
-    "build": "npm install && npm install--prefix Frontend npm run build --prefix Frontend",
-    "start": "nodemon backend/server.js", 
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
+  "dev": "nodemon backend/server.js",
+  "build": "npm install && npm install --prefix Frontend && npm run build --prefix Frontend",
+  "start": "node backend/server.js",
+  "test": "echo \"Error: no test specified\" && exit 1"
+},
+  "author": "Mohd Ahtesham",
   "license": "ISC",
   "description": "",
   "dependencies": {
