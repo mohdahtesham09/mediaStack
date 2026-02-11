@@ -1,14 +1,38 @@
 const mongoose = require("mongoose");
 
+// Disable Mongoose query buffering globally to avoid delayed timeout errors.
+mongoose.set("bufferCommands", false);
+
+const isDbConnected = () => mongoose.connection.readyState === 1;
+
+let listenersAttached = false;
+const attachConnectionListeners = () => {
+    if (listenersAttached) return;
+    listenersAttached = true;
+
+    mongoose.connection.on("disconnected", () => {
+        console.error("MongoDB disconnected");
+    });
+
+    mongoose.connection.on("error", (error) => {
+        console.error("MongoDB runtime error:", error.message);
+    });
+};
+
 const connectDB = async () => {
-    const mongoUri = process.env.MONGO_URI;
+    const mongoUri = process.env.MONGO_URI?.trim();
 
     if (!mongoUri) {
-        throw new Error("MONGO_URI is not set");
+        throw new Error(
+            "Database configuration error: MONGO_URI is missing. Please set MONGO_URI in .env."
+        );
     }
 
-    // Fail fast if DB is unavailable instead of buffering model operations.
-    mongoose.set("bufferCommands", false);
+    if (isDbConnected()) {
+        return mongoose.connection;
+    }
+
+    attachConnectionListeners();
 
     try {
         await mongoose.connect(mongoUri, {
@@ -22,3 +46,4 @@ const connectDB = async () => {
 };
 
 module.exports = connectDB;
+module.exports.isDbConnected = isDbConnected;

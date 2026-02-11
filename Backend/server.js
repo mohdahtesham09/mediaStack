@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require("cors")
 const dotenv = require('dotenv')
-const usersRouter = require("./routes/Users/users.router.js")
 const ConnectDB = require("./Config/database.js");
+const usersRouter = require("./routes/Users/users.router.js")
 const { notFound, globalErrorHandler } = require('./middleware/globalErrorhandler.js');
 const  createCategory  = require('./routes/categories/categoriesRoutes.js');
 const postsRouter = require('./routes/posts/postsRouter.js');
@@ -45,6 +45,19 @@ app.use(
     })
 );
 
+const ensureDatabaseConnection = (req, resp, next) => {
+    if (ConnectDB.isDbConnected()) {
+        return next();
+    }
+
+    return resp.status(503).json({
+        status: "failed",
+        message: "Database is temporarily unavailable. Please try again shortly.",
+    });
+};
+
+app.use("/api/v1", ensureDatabaseConnection);
+
 //?Setup the User Router
 app.use("/api/v1/users", usersRouter);
 //?Setup the Category Router
@@ -77,7 +90,8 @@ const startServer = async () => {
         await ConnectDB();
         app.listen(PORT);
     } catch (error) {
-        console.error("Server startup failed:", error.message);
+        console.error("Server startup failed: unable to connect to MongoDB.");
+        console.error(error.message);
         process.exit(1);
     }
 };
