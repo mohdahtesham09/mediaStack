@@ -22,7 +22,30 @@ ConnectDB();
 app.use(express.json());
 
 // ! Cors middleware
-app.use(cors());
+const parseOrigins = (origins = "") =>
+    origins
+        .split(",")
+        .map((origin) => origin.trim())
+        .filter(Boolean);
+
+const allowedOrigins = [
+    process.env.CLIENT_URL || "https://mediastack.in",
+    ...parseOrigins(process.env.LOCAL_CLIENT_URLS),
+    ...parseOrigins(process.env.CORS_ORIGINS),
+];
+
+app.use(
+    cors({
+        origin: (origin, callback) => {
+            // Allow non-browser requests (e.g., curl, server-to-server)
+            if (!origin) return callback(null, true);
+            if (allowedOrigins.length === 0) return callback(null, true);
+            if (allowedOrigins.includes(origin)) return callback(null, true);
+            return callback(new Error("Not allowed by CORS"));
+        },
+        credentials: true,
+    })
+);
 
 //?Setup the User Router
 app.use("/api/v1/users", usersRouter);
@@ -49,6 +72,6 @@ app.use(globalErrorHandler)
 /**
  * ! Launch Server 
  */
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 5000
 
 app.listen(PORT);
