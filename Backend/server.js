@@ -7,11 +7,12 @@ const { notFound, globalErrorHandler } = require('./middleware/globalErrorhandle
 const  createCategory  = require('./routes/categories/categoriesRoutes.js');
 const postsRouter = require('./routes/posts/postsRouter.js');
 const commentRouter = require('./routes/comments/commentRouter.js');
-const sendEmail = require("./utils/sendEmail.js");
+const path = require("path")
 
 // ? Create an express App
-// sendEmail("skillsquids8@gmail.com", "HelloWelcome123")
 const app = express();
+
+const _dirname = path.resolve();
 
 // ! Load The enviremnet Variable
 dotenv.config();
@@ -32,18 +33,22 @@ app.use("/api/v1/posts", postsRouter)
 // ?Setup the Comment Router
 app.use("/api/v1/comments", commentRouter)
 
+app.use(express.static(path.join(_dirname, "/Frontend/dist")));
+app.get("/{*splat}", (req, resp, next) => {
+    // Keep API 404s handled by backend error middleware
+    if (req.path.startsWith("/api/")) return next();
+    resp.sendFile(path.resolve(_dirname, "Frontend", "dist", "index.html"));
+});
+
 //?Not found error handler
 app.use(notFound)
 
 //?Setup the global error handler
 app.use(globalErrorHandler)
 
-
 /**
  * ! Launch Server 
  */
 const PORT = process.env.PORT || 3000
 
-app.listen(PORT, ()=>{
-    console.log(`Server are running on port : ${PORT}`)
-});
+app.listen(PORT);

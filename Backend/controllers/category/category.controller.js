@@ -6,7 +6,6 @@ const asyncHandler = require('express-async-handler');
 //@access private
 
 exports.createCategory = asyncHandler(async (req, resp, next) =>{
-    // console.log("USER AUTH =>", req.userAuth);
    const {name} = req.body;
    const isCategoryPresent = await Category.findOne({name});
    if(isCategoryPresent){

@@ -24,8 +24,6 @@ const INITIAL_STATE = {
 export const loginAction = createAsyncThunk("users/login", async (payload, { rejectWithValue, getState, dispatch }) => {
   // make request 
   try {
-    console.log("started Comm");
-
     const { data } = await axios.post("http://localhost:3000/api/v1/users/login", payload);
     localStorage.setItem("userInfo", JSON.stringify(data))
     return data;
@@ -39,8 +37,6 @@ export const loginAction = createAsyncThunk("users/login", async (payload, { rej
 export const registerAction = createAsyncThunk("users/register", async (payload, { rejectWithValue, getState, dispatch }) => {
   // make request 
   try {
-    console.log("started Comm");
-
     const { data } = await axios.post("http://localhost:3000/api/v1/users/register", payload);
     return data;
   } catch (error) {

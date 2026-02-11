@@ -92,8 +92,6 @@ userSchema.methods.genratePasswordResetToken = function(){
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
-    console.log("reset token", resetToken);
-    console.log("hashed token", this.passwordResetToken)
     // ! Set the expiry time to 10 min
     this.passwordResetExpires=Date.now() + 10 * 60 * 1000;
     return resetToken;
@@ -107,8 +105,6 @@ userSchema.methods.generateAccountVerificationToken = function(){
     .createHash("sha256")
     .update(VerificationToken)
     .digest("hex");
-    console.log("reset token", VerificationToken);
-    console.log("hashed token", this.accountVerificationToken)
     // ! Set the expiry time to 10 min
     this.accountVerificationExpires=Date.now() + 10 * 60 * 1000;
     return VerificationToken;

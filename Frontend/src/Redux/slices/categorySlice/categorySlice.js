@@ -33,12 +33,10 @@ const categoriesSlice = createSlice({
   extraReducers: (builder) => {
     // fetchCategories
     builder.addCase(fetchCategoriesAction.pending, (state) => {
-      console.log("pending run")
       state.loading = true;
     });
 
     builder.addCase(fetchCategoriesAction.fulfilled, (state, action) => {
-      console.log("fulfilled run")
       state.loading = false;
       state.success = true;
       state.error = null;
@@ -46,7 +44,6 @@ const categoriesSlice = createSlice({
     });
 
     builder.addCase(fetchCategoriesAction.rejected, (state, action) => {
-      console.log("rejected run")
       state.loading = false;
       state.success = false;
       state.error = action.payload;

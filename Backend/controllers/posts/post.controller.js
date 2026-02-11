@@ -63,7 +63,6 @@ exports.createPost = asyncHandler(async (req, resp, next) => {
         user,
         catg,
     });
-    console.log("File Uploded: ", req.file);
     // response already sent above
 
 });
