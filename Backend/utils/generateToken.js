@@ -6,7 +6,7 @@ const genrateToken = (user) => {
             id: user._id,
         },
     };
-    const token = jwt.sign(payLoad, process.env.JWT_KEY, {expiresIn: "1h"})
+    const token = jwt.sign(payLoad, process.env.JWT_KEY, {expiresIn: "7d"})
     return token;
 
 }
