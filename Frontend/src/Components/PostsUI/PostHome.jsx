@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+npm import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -15,10 +15,29 @@ const PostHome = () => {
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const { posts, error, loading } = useSelector((state) => state?.posts);
+  const [activeHeroImageIndex, setActiveHeroImageIndex] = useState(0);
+
+  const heroImages = [
+    "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=2000",
+    "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=2000",
+    "https://images.unsplash.com/photo-1484417894907-623942c8ee29?auto=format&fit=crop&q=80&w=2000",
+    "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&q=80&w=2000",
+    "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=2000",
+  ];
 
   useEffect(() => {
     dispatch(fetchPublicPostsAction({ page }));
   }, [dispatch, page]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setActiveHeroImageIndex(
+        (prevIndex) => (prevIndex + 1) % heroImages.length
+      );
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [heroImages.length]);
 
   // Handle data structure (initial array vs paginated object)
   const postList = Array.isArray(posts) ? posts : posts?.post || [];
@@ -45,48 +64,54 @@ const PostHome = () => {
   return (
     <div className='bg-slate-50 min-h-screen'>
       {/* Hero Section */}
-      <section className='relative h-[600px] flex items-center justify-center overflow-hidden'>
-        {/* Background Overlay */}
-        <div className='absolute inset-0 z-0'>
-          <img
-            src='https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=2000'
-            alt='Hero Banner'
-            className='w-full h-full object-cover'
-          />
-          <div className='absolute inset-0 bg-gradient-to-br from-[#667eea]/90 to-[#764ba2]/90 mix-blend-multiply'></div>
-        </div>
-
-        {/* Hero Content */}
-        <div className='relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white'>
-          <div className='inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold uppercase tracking-wider mb-6 animate-fade-in'>
-            <span className='w-2 h-2 rounded-full bg-blue-400'></span>
-            Featured Post
+      <section className='px-4 sm:px-6 lg:px-8 my-10'>
+        <div className='relative max-w-7xl mx-auto p-10 rounded-3xl shadow-lg overflow-hidden'>
+          <div className='absolute inset-0'>
+            {heroImages.map((image, index) => (
+              <div
+                key={image}
+                className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out ${
+                  index === activeHeroImageIndex ? "opacity-100" : "opacity-0"
+                }`}
+                style={{ backgroundImage: `url(${image})` }}
+              />
+            ))}
           </div>
-          <h1 className='text-4xl md:text-6xl font-extrabold tracking-tight mb-6 animate-slide-up'>
-            UI Text Placeholder
-          </h1>
-          <p className='text-lg md:text-xl text-blue-50/90 max-w-2xl mx-auto mb-10 leading-relaxed font-light animate-slide-up [animation-delay:200ms]'>
-            UI Text Placeholder
-          </p>
-          <div className='flex flex-col sm:flex-row gap-4 justify-center animate-slide-up [animation-delay:400ms]'>
-            {/* {loading} */}
 
-            {/* {error} */}
+          <div className='absolute inset-0 bg-gradient-to-br from-black/75 via-black/55 to-black/70' />
 
-            {/* {data-placeholder} */}
+          <div className='relative z-10 h-[40vh] md:h-[70vh] flex items-center justify-center text-center'>
+            <div className='max-w-3xl text-white'>
+              <span className='inline-flex items-center rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] backdrop-blur-sm'>
+                Featured Blog
+              </span>
 
-            <Link
-              to='/posts'
-              className='px-8 py-3.5 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-all duration-300 shadow-xl hover:shadow-2xl active:scale-95 flex items-center justify-center gap-2'
-            >
-              Read Article <ArrowRightIcon className='w-4 h-4' />
-            </Link>
-            <Link
-              to='/posts'
-              className='px-8 py-3.5 bg-white/10 backdrop-blur-md border border-white/30 text-white font-semibold rounded-xl hover:bg-white/20 transition-all duration-300 flex items-center justify-center'
-            >
-              Explore Feed
-            </Link>
+              <h1 className='mt-5 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight'>
+                Insightful writing for builders, creators, and curious minds
+              </h1>
+
+              <p className='mt-4 text-sm sm:text-base md:text-lg text-slate-100/90 leading-relaxed'>
+                Discover thoughtful stories about design, engineering, and the
+                craft of building products that matter.
+              </p>
+
+              <div className='mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4'>
+                <Link
+                  to='/posts'
+                  className='inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-sm sm:text-base font-semibold text-slate-900 transition hover:bg-slate-100'
+                >
+                  Read Blog
+                  <ArrowRightIcon className='h-4 w-4' />
+                </Link>
+
+                <Link
+                  to='/posts'
+                  className='inline-flex items-center justify-center rounded-xl border border-white/35 bg-white/10 px-6 py-3 text-sm sm:text-base font-semibold text-white backdrop-blur-sm transition hover:bg-white/20'
+                >
+                  Explore
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
